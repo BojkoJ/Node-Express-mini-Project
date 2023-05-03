@@ -4,6 +4,7 @@ const app = express();
 
 app.use(express.json());
 
+//definice pole pro příklad
 const courses = [
     {
         id: 1,
@@ -19,12 +20,15 @@ const courses = [
     }
 ]
 
+//když v adrese není /api/courses... tak je "hlavní stránka"
 app.get('/', (req, res) => {
     res.send('Hello world');
 });
 
+//getnutí všech kurzů a vypsání do prohlížeče (pole objektů)
 app.get('/api/courses', (req, res) => {
-    //tady by jsme chtěli selectnout 'courses' z databáze
+    //tady by jsme ideálně chtěli selectnout 'courses' z databáze
+    //v tomto mini projektu, nepracuju s databází
     res.send(courses);
 });
 
@@ -38,7 +42,7 @@ app.get('/api/courses/:id', (req, res) => {
     }
 });
 
-//update jména
+//insert nového kurzu
 app.post('/api/courses', (req, res) => {
     //validovat
     //pokud je invalidní, return 400 - Bad request
@@ -59,6 +63,7 @@ app.post('/api/courses', (req, res) => {
     res.send(course);
 });
 
+//update jména kurzu, podle Id v URL
 app.put('/api/courses/:id', (req, res) => {
     //vyhledat kurz
     //když neexistuje, return 404
@@ -102,6 +107,7 @@ app.delete('/api/courses/:id', (req, res) => {
     res.send(course);
 });
 
+//spuštění applikace - listen na přiděleném systémovém portu, pokud není přidělený použije se port 3000
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
@@ -111,6 +117,5 @@ function validateCourse(course) {
     const schema = {
         name: Joi.string().min(2).required()
     };
-
     return Joi.validate(course, schema);
 }
